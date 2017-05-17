@@ -18,13 +18,13 @@
     [super viewDidLoad];
     
     //串行队列
-    [self serialQueue];
+//    [self serialQueue];
     
     //并发队列
-    [self concurrentQueue];
+//    [self concurrentQueue];
     
     //全局并发队列
-    [self globalQueue];
+//    [self globalQueue];
     
     //dispatch_set_target_queue
     
@@ -33,23 +33,24 @@
     1.改变队列的优先级。
     2.防止多个串行队列的并发执行。
    */
-    [self changePriority];
+//    [self changePriority];
     
     //延时
-    [self afterQueue];
+//    [self afterQueue];
     
     //预处理任务需要一个接一个的执行：
-    [self serialGlobalQueue];
+//    [self serialGlobalQueue];
     
     //dispatch_barrier_async
-    [self barrier];
+//    [self barrier];
     
     //死锁
 //    [self dispatch_sync_3];
     
     
     //dispatch_apply
-    [self dispatch_apply_1];
+//    [self dispatch_apply_1];
+    [self dispatch_semaphore];
 }
 
 
@@ -267,6 +268,24 @@
     NSLog(@"完毕");
 }
 
+- (void)dispatch_semaphore{
 
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    dispatch_semaphore_t sema =  dispatch_semaphore_create(5);
+  
+    for (NSInteger i = 0; i < 100; i++) {
+        NSLog(@"%ld",i);
+        dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSLog(@"--- %ld",i);
+            dispatch_semaphore_signal(sema);
+        });
+    }
+
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+   
+
+}
 
 @end
