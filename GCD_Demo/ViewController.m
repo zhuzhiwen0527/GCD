@@ -277,9 +277,12 @@
   
     for (NSInteger i = 0; i < 100; i++) {
         NSLog(@"%ld",i);
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);  
         dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSLog(@"--- %ld",i);
+            [NSThread sleepForTimeInterval:2.00];
             dispatch_semaphore_signal(sema);
+            
         });
     }
 
